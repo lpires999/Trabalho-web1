@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genética | Ciência e Vida</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --azul-marinho: #102542;
+            --azul: #24476b;
+            --branco: #ffffff;
+            --cinza: #f1f3f5;
+            --cinza-texto: #5c6672;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--cinza);
+            color: var(--azul-marinho);
+            line-height: 1.7;
+        }
+
+        header {
+            background: var(--azul-marinho);
+            color: var(--branco);
+            padding: 25px 6%;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: #d7e0ea;
+            margin-top: 5px;
+        }
+
+        nav {
+            background: var(--branco);
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 15px;
+            flex-wrap: wrap;
+            box-shadow: 0 3px 10px #10254212;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px #10254225;
+        }
+
+        nav button {
+            background: transparent;
+            color: var(--azul-marinho);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        nav button:hover,
+        nav button.active {
+            background: var(--azul-marinho);
+            color: var(--branco);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+            min-height: 60vh;
+        }
+
+        .aba {
+            display: none;
+            animation: aparecer 0.35s ease;
+        }
+
+        .aba.active {
+            display: block;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .banner {
+            background: var(--azul-marinho);
+            color: var(--branco);
+            padding: 45px 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .banner h2 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+            color: var(--branco);
+        }
+
+        .banner p {
+            max-width: 700px;
+            margin: auto;
+            color: #e0e7ef;
+        }
+
+        .card {
+            background: var(--branco);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 15px #1025420d;
+        }
+
+        h2, h3 {
+            color: var(--azul-marinho);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        .grade {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .grade .card {
+            margin-bottom: 0;
+        }
+
+        .icone {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .imagem-dna {
+            display: block;
+            width: 100%;
+            max-width: 650px;
+            max-height: 300px;
+            object-fit: cover;
+            margin: 20px auto;
+            border-radius: 12px;
+        }
+
+        .botao {
+            display: inline-block;
+            background: var(--azul-marinho);
+            color: var(--branco);
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .botao:hover {
+            background: var(--azul);
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd2d9;
+            border-radius: 8px;
+            background: white;
+            color: var(--azul-marinho);
+            font-size: 1rem;
+        }
+
+        .acoes {
+            grid-column: 1 / -1;
+            margin-top: 5px;
+        }
+
+        #resultado {
+            display: none;
+            margin-top: 25px;
+            padding: 22px;
+            background: var(--cinza);
+            border-left: 5px solid var(--azul-marinho);
+            border-radius: 8px;
+        }
+
+        #resultado h3 {
+            margin-bottom: 10px;
+        }
+
+        .aviso {
+            font-size: 0.9rem;
+            color: var(--cinza-texto);
+            margin-top: 15px;
+        }
+
+        footer {
+            background: var(--azul-marinho);
+            color: var(--branco);
+            text-align: center;
+            padding: 22px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 750px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .grade {
+                grid-template-columns: 1fr;
+            }
+
+            .formulario {
+                grid-template-columns: 1fr;
+            }
+
+            .banner {
+                padding: 30px 20px;
+            }
+
+            .banner h2 {
+                font-size: 1.6rem;
+            }
+
+            nav {
+                gap: 5px;
+            }
+
+            nav button {
+                padding: 10px 14px;
+            }
+
+            main {
+                margin-top: 20px;
+                padding: 0 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>GENÉTICA</h1>
+        <p>Explorando os genes</p>
+    </header>
+
+    <nav aria-label="Menu principal">
+        <button class="active" data-aba="inicio">Início</button>
+        <button data-aba="informacoes">Informações</button>
+        <button data-aba="simulador">Simulador</button>
+    </nav>
+
+    <main>
+
+        <!-- ABA 1: INÍCIO -->
+        <section id="inicio" class="aba active">
+
+            <div class="banner">
+                <h2>O que é Genética?</h2>
+                <p>
+                    A genética é a área da Biologia que estuda os genes,
+                    a hereditariedade e as características transmitidas
+                    de uma geração para outra.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🧬 Conheça o DNA</h3>
+
+                <p>
+                    O DNA é uma molécula que contém informações genéticas
+                    importantes para o desenvolvimento e funcionamento
+                    dos seres vivos. Essas informações ajudam a determinar
+                    diversas características de um organismo.
+                </p>
+
+                <img
+                    class="imagem-dna"
+                    src="https://profissaobiotec.com.br/wp-content/uploads/2020/11/dna-helix-structure-closeup_36845-422.jpg"
+                    alt="Ilustração científica relacionada à genética"
+                    loading="lazy"
+                >
+            </div>
+
+            <div class="grade">
+
+                <article class="card">
+                    <div class="icone">🧬</div>
+                    <h3>Genes</h3>
+                    <p>
+                        São segmentos do DNA que contêm instruções
+                        para características e funções do organismo.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="icone">🔬</div>
+                    <h3>Hereditariedade</h3>
+                    <p>
+                        É a transmissão de informações genéticas
+                        dos pais para os filhos.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="icone">🌱</div>
+                    <h3>Variabilidade</h3>
+                    <p>
+                        As diferenças genéticas contribuem para a
+                        diversidade entre os indivíduos.
+                    </p>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ABA 2: INFORMAÇÕES -->
+        <section id="informacoes" class="aba">
+
+            <div class="card">
+                <h2>Informações sobre Genética</h2>
+
+                <p>
+                    A genética procura compreender como as características
+                    são transmitidas entre gerações e como as informações
+                    presentes no DNA influenciam os seres vivos.
+                </p>
+            </div>
+
+            <article class="card">
+                <h3>1. DNA</h3>
+                <p>
+                    O ácido desoxirribonucleico (DNA) armazena informações
+                    genéticas. Sua estrutura apresenta duas fitas
+                    organizadas em forma de dupla hélice.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>2. Genes e cromossomos</h3>
+                <p>
+                    Os genes são segmentos do DNA. Os cromossomos são
+                    estruturas que organizam o DNA nas células.
+                    Os seres humanos geralmente possuem 46 cromossomos
+                    nas células do corpo.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>3. Herança genética</h3>
+                <p>
+                    Uma pessoa recebe informações genéticas de ambos
+                    os pais. A combinação dessas informações contribui
+                    para características como o tipo sanguíneo e parte
+                    da variação da cor dos olhos e do cabelo.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>4. Genótipo e fenótipo</h3>
+                <p>
+                    <strong>Genótipo:</strong> conjunto de informações
+                    genéticas de um indivíduo.
+                </p>
+                <p>
+                    <strong>Fenótipo:</strong> características observáveis,
+                    resultantes da interação entre os genes e o ambiente.
+                </p>
+            </article>
+
+            <article class="card">
+                <h3>5. Importância da genética</h3>
+                <p>
+                    A genética contribui para pesquisas sobre doenças
+                    hereditárias, desenvolvimento de tratamentos,
+                    agricultura, conservação de espécies e compreensão
+                    da diversidade dos seres vivos.
+                </p>
+            </article>
+
+        </section>
+
+        <!-- ABA 3: SIMULADOR -->
+        <section id="simulador" class="aba">
+
+            <div class="card">
+                <h2>Simulador de Características</h2>
+
+                <p>
+                    Escolha características dos seus pais e veja uma
+                    combinação ilustrativa para aprender sobre herança.
+                </p>
+
+                <form id="formulario" class="formulario">
+
+                    <div class="campo">
+                        <label for="olhosMae">Cor dos olhos — Mãe</label>
+                        <select id="olhosMae" required>
+                            <option value="">Selecione</option>
+                            <option value="Castanhos">Castanhos</option>
+                            <option value="Azuis">Azuis</option>
+                            <option value="Verdes">Verdes</option>
+                            <option value="Mel">Mel</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="olhosPai">Cor dos olhos — Pai</label>
+                        <select id="olhosPai" required>
+                            <option value="">Selecione</option>
+                            <option value="Castanhos">Castanhos</option>
+                            <option value="Azuis">Azuis</option>
+                            <option value="Verdes">Verdes</option>
+                            <option value="Mel">Mel</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="cabeloMae">Cor do cabelo — Mãe</label>
+                        <select id="cabeloMae" required>
+                            <option value="">Selecione</option>
+                            <option value="Preto">Preto</option>
+                            <option value="Castanho">Castanho</option>
+                            <option value="Loiro">Loiro</option>
+                            <option value="Ruivo">Ruivo</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="cabeloPai">Cor do cabelo — Pai</label>
+                        <select id="cabeloPai" required>
+                            <option value="">Selecione</option>
+                            <option value="Preto">Preto</option>
+                            <option value="Castanho">Castanho</option>
+                            <option value="Loiro">Loiro</option>
+                            <option value="Ruivo">Ruivo</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="peleMae">Tom de pele — Mãe</label>
+                        <select id="peleMae" required>
+                            <option value="">Selecione</option>
+                            <option value="Branco">Branco</option>
+                            <option value="Pardo">Pardo</option>
+                            <option value="Amarelo">Amarelo</option>
+                            <option value="Negro">Negro</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="pelePai">Tom de pele — Pai</label>
+                        <select id="pelePai" required>
+                            <option value="">Selecione</option>
+                            <option value="Branco">Branco</option>
+                            <option value="Pardo">Pardo</option>
+                            <option value="Amarelo">Amarelo</option>
+                            <option value="Negro">Negro</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="curvaturadocabeloMae">Curvatura do cabelo — Mãe</label>
+                        <select id="curvaturadocabeloMae" required>
+                            <option value="">Selecione</option>
+                            <option value="Liso">Liso</option>
+                            <option value="Ondulado">Ondulado</option>
+                            <option value="Cacheado">Cacheado</option>
+                            <option value="Crespo">Crespo</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="curvaturadocabeloPai">Curvatura do cabelo — Pai</label>
+                        <select id="curvaturadocabeloPai" required>
+                            <option value="">Selecione</option>
+                            <option value="Liso">Liso</option>
+                            <option value="Ondulado">Ondulado</option>
+                            <option value="Cacheado">Cacheado</option>
+                            <option value="Crespo">Crespo</option>
+                        </select>
+                    </div>
+
+                    <div class="acoes">
+                        <button class="botao" type="submit">
+                            Simular combinação
+                        </button>
+                    </div>
+
+                </form>
+
+                <div id="resultado" aria-live="polite"></div>
+
+                <p class="aviso">
+                    Importante: este simulador é apenas educativo.
+                    A cor dos olhos, do cabelo e da pele depende de
+                    vários genes e de outros fatores. O resultado
+                    apresentado não prevê as características reais
+                    de uma criança.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Genética | Ciência, conhecimento e vida</p>
+    </footer>
+
+    <script>
+        // Navegação entre as três abas
+        const botoes = document.querySelectorAll("nav button");
+        const abas = document.querySelectorAll(".aba");
+
+        botoes.forEach(function (botao) {
+            botao.addEventListener("click", function () {
+                const destino = botao.dataset.aba;
+
+                abas.forEach(function (aba) {
+                    aba.classList.remove("active");
+                });
+
+                botoes.forEach(function (item) {
+                    item.classList.remove("active");
+                });
+
+                document.getElementById(destino).classList.add("active");
+                botao.classList.add("active");
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
+        });
+
+        // Simulador educativo
+        document
+            .getElementById("formulario")
+            .addEventListener("submit", function (evento) {
+                evento.preventDefault();
+
+                function sortear(valor1, valor2) {
+                    return Math.random() < 0.5 ? valor1 : valor2;
+                }
+
+                const olhos = sortear(
+                    document.getElementById("olhosMae").value,
+                    document.getElementById("olhosPai").value
+                );
+
+                const cabelo = sortear(
+                    document.getElementById("cabeloMae").value,
+                    document.getElementById("cabeloPai").value
+                );
+
+                const pele = sortear(
+                    document.getElementById("peleMae").value,
+                    document.getElementById("pelePai").value
+                );
+
+                const curvatura = sortear(
+                    document.getElementById("curvaturadocabeloMae").value,
+                    document.getElementById("curvaturadocabeloPai").value
+                );
+
+                const resultado = document.getElementById("resultado");
+
+                resultado.innerHTML = `
+                    <h3>Resultado ilustrativo</h3>
+                    <p><strong>Olhos:</strong> ${olhos}</p>
+                    <p><strong>Cabelo:</strong> ${cabelo}</p>
+                    <p><strong>Tom de pele:</strong> ${pele}</p>
+                    <p><strong>Curvatura do cabelo:</strong> ${curvatura}</p>
+                    <p>
+                        Essa combinação foi sorteada para fins educativos.
+                        Ela não representa uma previsão genética real.
+                    </p>
+                `;
+
+                resultado.style.display = "block";
+            });
+    </script>
+
+</body>
+</html>
